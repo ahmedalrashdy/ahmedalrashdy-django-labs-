@@ -1,0 +1,94 @@
+{% extends "base2.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+<div class="container mt-5">
+    <h2>قائمة المنتجات</h2>
+    <a href="{% url 'products:product-create' %}" class="btn btn-primary mb-3">إضافة منتج جديد</a>
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">تصفية المنتجات</div>
+        <div class="card-body">
+            <form method="get">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="text" name="name" class="form-control" placeholder="اسم المنتج" value="{{ request.GET.name }}">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" name="buy_price_min" class="form-control" placeholder="سعر الشراء الأدنى" value="{{ request.GET.buy_price_min }}">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" name="buy_price_max" class="form-control" placeholder="سعر الشراء الأعلى" value="{{ request.GET.buy_price_max }}">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <input type="number" name="sell_price_min" class="form-control" placeholder="سعر البيع الأدنى" value="{{ request.GET.sell_price_min }}">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" name="sell_price_max" class="form-control" placeholder="سعر البيع الأعلى" value="{{ request.GET.sell_price_max }}">
+                    </div>
+                    <div class="col-md-4">
+                        <select name="has_discount" class="form-control">
+                            <option value="" {% if not request.GET.has_discount %}selected{% endif %}>كل المنتجات</option>
+                            <option value="True" {% if request.GET.has_discount == "True" %}selected{% endif %}>منتجات بخصومات</option>
+                            <option value="False" {% if request.GET.has_discount == "False" %}selected{% endif %}>بدون خصومات</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-success w-100">تطبيق التصفية</button>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{% url 'products:product-list' %}" class="btn btn-secondary w-100">إعادة تعيين</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <table class="table table-hover table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>رقم المنتج</th>
+                <th>اسم المنتج</th>
+                <th>الصورة</th>
+                <th>سعر الشراء</th>
+                <th>سعر البيع</th>
+                <th>السعر بعد الخصم</th>
+                <th>الكمية</th>
+                <th>التصنيف</th>
+                <th>الخصم</th>
+                <th>التحكم</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in filter.qs %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail" style="width: 100px;">
+                </td>
+                <td>{{ product.buy_price }}</td>
+                <td>{{ product.sell_price }}</td>
+                <td>{{ product.get_discounted_price }}</td>
+                <td>{{ product.qty }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>{{ product.discount }}%</td>
+                <td>
+                    <a href="{% url 'products:product-update' product.id %}" class="btn btn-sm btn-warning">تعديل</a>
+                    <a href="{% url 'products:product-delete' product.id %}" class="btn btn-sm btn-danger">حذف</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10" class="text-center">لا توجد منتجات مطابقة للتصفية.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+</div>
+{% endblock %}

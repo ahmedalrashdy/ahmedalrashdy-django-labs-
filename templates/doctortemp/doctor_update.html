@@ -1,0 +1,86 @@
+{% include 'doc_base.html' %} {% block content %}
+<h1 class="border border-primary m-5 p-5">Update Doctors</h1>
+<div class="m-5 border-primary">
+  <form
+    method="post"
+    action="{% url 'doctors:edit' doctor.id %}"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+    <div class="col-md-4">
+      <label for="validationCustom01" class="form-label">First name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="validationCustom01"
+        required
+        name="fname"
+        value="{{doctor.first_name}}"
+      />
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+    <div class="col-md-4">
+      <label for="validationCustom02" class="form-label">Last name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="validationCustom02"
+        required
+        name="lname"
+        value="{{doctor.last_name}}"
+      />
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+    <div class="col-md-4">
+      <label for="validationCustom02" class="form-label">Specialty</label>
+      <input
+        type="text"
+        class="form-control"
+        id="validationCustom02"
+        required
+        name="specialty"
+        value="{{doctor.specialty}}"
+      />
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+    <div class="col-md-3">
+      <label for="validationDefault05" class="form-label">Age</label>
+      <input
+        type="number"
+        class="form-control"
+        id="validationDefault05"
+        required
+        name="age"
+        value="{{doctor.age}}"
+      />
+    </div>
+    <div class="input-group">
+      <span class="input-group-text">With textarea</span>
+      <textarea class="form-control" aria-label="With textarea" name="report">
+{{doctor.report}}</textarea
+      >
+    </div>
+    <div class="mb-3">
+      <label for="formFile" class="form-label">Medical Report</label>
+      <input
+        class="form-control"
+        type="file"
+        id="formFile"
+        name="medicalreport"
+        value="{{doctor.file.path}}"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="formImage" class="form-label">Doctor Image</label>
+      <input
+        class="form-control"
+        type="file"
+        id="formImage"
+        name="image"
+        value="{{doctor.image.name}}"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary m-2">Submit</button>
+  </form>
+</div>
+{% endblock %}

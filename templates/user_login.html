@@ -1,0 +1,35 @@
+{% include 'layout/header.html' %}
+<!-- -->
+
+<div class="border border-primary m-5 p-5">
+  <h1 class="card-title text-center bg-primary text-white m-2 p-3">
+    User Login
+  </h1>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-floting mb-3">
+      <label for="floatingEmail" class="form-label">Email address</label>
+      <input
+        type="email"
+        name="email"
+        id="floatingEmail"
+        class="form-control"
+      />
+    </div>
+
+    <div class="form-floting mb-3">
+      <label for="floatingPassword" class="form-label">Password</label>
+      <input
+        type="password"
+        name="password"
+        id="floatingPassword"
+        class="form-control"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+    <a href="{% url 'user:register' %}" class="btn btn-link">Register</a>
+  </form>
+</div>

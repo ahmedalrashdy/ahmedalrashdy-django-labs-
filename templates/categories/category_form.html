@@ -1,0 +1,59 @@
+{% extends "base2.html" %}
+{% load custom_filters %}  <!-- تحميل الفلتر هنا -->
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h2>{% if object %}تعديل الفئة{% else %}إضافة فئة جديدة{% endif %}</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" class="form-horizontal">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label">اسم الفئة</label>
+                    {{ form.name|add_class:"form-control" }}
+                    {% if form.name.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.name.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">صورة الفئة</label>
+                    {{ form.image|add_class:"form-control" }}
+                    {% if form.image.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.image.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-success">{% if object %}تعديل{% else %}إضافة{% endif %}</button>
+            </form>
+            {% if object and object.image %}
+            <h4 class="mt-3">الصورة الحالية</h4>
+            <img src="{{ object.image.url }}" alt="{{ object.name }}" class="img-thumbnail" style="width: 200px;">
+            {% endif %}
+            <h4 class="mt-3">الصورة المختارة</h4>
+            <img id="imagePreview" class="img-thumbnail" style="width: 200px;">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('id_image').addEventListener('change', function(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('imagePreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    });
+</script>
+{% endblock %}

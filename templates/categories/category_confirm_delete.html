@@ -1,0 +1,14 @@
+{% extends "base2.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>تأكيد حذف الفئة: {{ category.name }}</h2>
+    <div class="alert alert-danger" role="alert">
+        هل أنت متأكد أنك تريد حذف هذه الفئة؟ سيتم حذف جميع المنتجات المرتبطة بها.
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">نعم، حذف</button>
+        <a href="{% url 'products:category-list' %}" class="btn btn-secondary">إلغاء</a>
+    </form>
+</div>
+{% endblock %}

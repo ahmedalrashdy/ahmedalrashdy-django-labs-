@@ -1,0 +1,20 @@
+{% extends "base2.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>تفاصيل الفئة: {{ category.name }}</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">اسم الفئة: {{ category.name }}</h5>
+            <p class="card-text">
+                {% if category.image %}
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-thumbnail" style="width: 200px;">
+                {% else %}
+                لا توجد صورة
+                {% endif %}
+            </p>
+            <a class="btn btn-warning" href="{% url 'products:category-update' category.id %}">تعديل</a>
+            <a class="btn btn-danger" href="{% url 'products:category-delete' category.id %}">حذف</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
