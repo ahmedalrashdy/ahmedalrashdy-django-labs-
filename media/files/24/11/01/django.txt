@@ -1,0 +1,35 @@
+   in cmd
+
+>pip install virtualenv       امر تثبيت البيئة
+
+>virtualenv name_virtualenv   انشاء بيئه افتراضية باسم 
+
+>cd name_virtualenv         امر الدخول الى البيئه
+
+>Scripts\activate         امر تفعيل البيئة
+
+>Scripts\deactivate       امر الغى تفعيل البيئة
+
+>pip install django       django امر تحميل ال 
+
+>django-admin startproject nameproject    امر انشاء مشروع
+
+>cd nameproject
+>code .
+
+>python manage.py   امر عرض الاوامر على ملف التحكم
+
+>python manage.py runserver    امر تشغيل المشروع
+
+>django-admin startapp nameapp   امر انشاء تطبيق
+
+auto django
+django
+
+sqlite view
+
+//Api 
+pip install djangorestframework
+
+//authentcated
+pip install djangorestframework-simplejwt

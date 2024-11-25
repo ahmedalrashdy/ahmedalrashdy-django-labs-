@@ -1,0 +1,88 @@
+import socket
+import pyaudio
+
+# إعدادات الصوت
+FORMAT = pyaudio.paInt16
+CHANNELS = 1
+RATE = 44100
+CHUNK = 1024
+
+# إعدادات الاتصال
+server_ip = '0.0.0.0'
+server_port = 12349
+
+# إعداد PyAudio
+audio = pyaudio.PyAudio()
+# دفق الإدخال لتسجيل الصوت
+input_stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
+# دفق الإخراج لتشغيل الصوت
+output_stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, output=True, frames_per_buffer=CHUNK)
+
+# إنشاء الخادم
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind((server_ip, server_port))
+server_socket.listen(1)
+
+print("في انتظار اتصال العميل...")
+client_socket, client_address = server_socket.accept()
+print(f"متصل من: {client_address}")
+
+# استقبال الصوت من العميل وإرساله
+try:
+    while True:
+        data = input_stream.read(CHUNK)
+        client_socket.sendall(data)  # إرسال الصوت للعميل
+        received_data = client_socket.recv(CHUNK)  # استقبال الصوت من العميل
+        output_stream.write(received_data)  # تشغيل الصوت
+except KeyboardInterrupt:
+    pass
+
+# إغلاق الاتصال
+client_socket.close()
+server_socket.close()
+input_stream.stop_stream()
+input_stream.close()
+output_stream.stop_stream()
+output_stream.close()
+audio.terminate()
+------------------------------------
+import socket
+import pyaudio
+# إعدادات الصوت
+FORMAT = pyaudio.paInt16
+CHANNELS = 1
+RATE = 44100
+CHUNK = 1024
+
+# إعدادات الاتصال
+server_ip = '192.168.43.245'
+server_port = 12349
+
+# إعداد PyAudio
+audio = pyaudio.PyAudio()
+# دفق الإدخال لتسجيل الصوت
+input_stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
+# دفق الإخراج لتشغيل الصوت
+output_stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, output=True, frames_per_buffer=CHUNK)
+
+# الاتصال بالخادم
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((server_ip, server_port))
+
+# إرسال واستقبال الصوت
+try:
+    while True:
+        data = input_stream.read(CHUNK)
+        client_socket.sendall(data)  # إرسال الصوت للخادم
+        received_data = client_socket.recv(CHUNK)  # استقبال الصوت من الخادم
+        output_stream.write(received_data)  # تشغيل الصوت
+except KeyboardInterrupt:
+    pass
+
+# إغلاق الاتصال
+client_socket.close()
+input_stream.stop_stream()
+input_stream.close()
+output_stream.stop_stream()
+output_stream.close()
+audio.terminate()

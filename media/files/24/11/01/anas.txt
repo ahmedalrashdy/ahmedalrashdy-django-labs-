@@ -1,0 +1,63 @@
+import socket
+import threading
+import tkinter as tk
+from tkinter import scrolledtext
+
+def connect_to_server():
+    global client_socket
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect(('192.168.0.138', 12342))
+    log_box.config(state=tk.NORMAL)
+    log_box.insert(tk.END, "تم الاتصال بالخادم!\n")
+    log_box.config(state=tk.DISABLED)
+
+    # بدء خيط لاستقبال الرسائل
+    threading.Thread(target=receive_messages, daemon=True).start()
+
+def receive_messages():
+    while True:
+        try:
+            response = client_socket.recv(1024).decode()
+            if not response:
+                break
+            log_box.config(state=tk.NORMAL)
+            log_box.insert(tk.END, f"{response}\n")
+            log_box.config(state=tk.DISABLED)
+        except:
+            break
+
+def send_message():
+    message = message_box.get()
+    if message.lower() == 'exit':
+        log_box.config(state=tk.NORMAL)
+        log_box.insert(tk.END, "تم إنهاء الاتصال من قبل العميل.\n")
+        log_box.config(state=tk.DISABLED)
+    client_socket.send(message.encode())
+    log_box.config(state=tk.NORMAL)
+    log_box.insert(tk.END, f"أنت: {message}\n")
+    log_box.config(state=tk.DISABLED)
+    message_box.delete(0, tk.END)
+
+# إعداد واجهة المستخدم
+root = tk.Tk()
+root.title("عميل المحادثة")
+root.geometry("400x500")
+root.configure(bg='#f0f0f0')
+
+# صندوق لعرض الرسائل
+log_box = scrolledtext.ScrolledText(root, width=50, height=20, bg='#e6e6e6', wrap=tk.WORD)
+log_box.pack(padx=10, pady=10)
+log_box.config(state=tk.DISABLED)
+
+# صندوق لإدخال الرسائل
+message_box = tk.Entry(root, width=40, font=("Arial", 12))
+message_box.pack(padx=10, pady=10)
+
+# زر لإرسال الرسائل
+send_button = tk.Button(root, text="إرسال", command=send_message, bg='#4CAF50', fg='white', font=("Arial", 12))
+send_button.pack(pady=5)
+
+# الاتصال بالخادم عند بدء التشغيل
+connect_to_server()
+
+root.mainloop()
